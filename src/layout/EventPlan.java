@@ -13,14 +13,9 @@ package layout;
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 import javax.swing.*;
-import javax.swing.ImageIcon;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
 import java.util.*;
-import java.util.Calendar;
-import java.util.Date;
 import org.jdatepicker.impl.*;
 import org.jdatepicker.util.*;
 import org.jdatepicker.*;
@@ -31,9 +26,9 @@ public class EventPlan extends JFrame implements ActionListener, ItemListener
   public static final int WIDTH = 1300;
   public static final int HEIGHT = 500;
   public static final int charactersNumber = 15; 
-  public static final int MIN_ZOOM = 0;
-  public static final int MAX_ZOOM = 21;
-  private static int zoomValue = 4;
+  public static final int MIN_ZOOM = 0;// GOOGLE API
+  public static final int MAX_ZOOM = 21;//GOOGLE API
+  private static int zoomValue = 4;// GOOGLE API  
   private JTextField theSearch;
   private JLabel background01;
   private JPanel search ;
@@ -78,6 +73,7 @@ public static void main (String [] args){
   }
 
   public EventPlan(){
+	  // WELCOME WINDOW ( FIRST ONE ) 
     JFrame welcomeWindow = new JFrame("Event Planner");
     setSize(300,200);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -112,12 +108,13 @@ public static void main (String [] args){
 
   }
 
-  @SuppressWarnings("unchecked")
+  
 public void actionPerformed(ActionEvent e){
+	
     String buttonString = e.getActionCommand();
     
     if (buttonString.equals("New Event")) {
-      
+    	// SETTING UP THE MAIN WINDOW TO SCHEDUEL THE EVENT 
       newEventWindow = new JFrame("Scheduel a new event");
       newEventWindow.setSize(WIDTH, HEIGHT);
       newEventWindow.setLayout(new BorderLayout()); 
@@ -140,42 +137,41 @@ public void actionPerformed(ActionEvent e){
      JPanel spaceOccupying = new JPanel();
      spaceOccupying.setLayout(new BorderLayout());
      
-//      
+    
       // EVENT TYPE PANEL STARTS HERE :
      
       JLabel eventTimingLabel= new JLabel("Event Timing");
       eventTimingLabel.setFont(new Font("Times New Roman",Font.BOLD,15));
       eventPanel = new JPanel();
-      eventPanel.setLayout(new GridLayout(4,5));
-      //newEventWindow.add(eventPanel, BorderLayout.NORTH);
+      eventPanel.setLayout(new GridLayout(4,5));  
       JPanel dateAndCalender = new JPanel();
       dateAndCalender.setLayout(new GridLayout(1,4));
       dateAndCalender.setOpaque(false);
-      JLabel eventDateLabel= new JLabel("Date");// calander goes here SHAHADS PART
+      
+      JLabel eventDateLabel= new JLabel("Date");// calender goes here 
       eventDateLabel.setFont(new Font("Times New Roman",Font.BOLD,15));
-    //  eventPanel.add(eventDateLabel);
       dateAndCalender.add(eventDateLabel);
       UtilDateModel model = new UtilDateModel();
-      //model.setDate(20,04,2014);
       Properties p = new Properties();
       JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-     // eventPanel.add(datePanel);
       dateAndCalender.add(datePanel);
       spaceOccupying.add(dateAndCalender, BorderLayout.NORTH);
       eventPanel.add(eventTimingLabel);
+      
+      // JCOMBO DROP DOWN LIST FIRST DEFINED HERE:
       String[] eventTimestr = {"Morning", "Noon", "Night"};
       JComboBox eventTiming= new JComboBox(eventTimestr);
       eventTiming.addActionListener(this);
       eventPanel.add(eventTiming);
 
-      JLabel eventTypeLabel= new JLabel("Event Type");//menue goes here
+      JLabel eventTypeLabel= new JLabel("Event Type");
       eventPanel.add(eventTypeLabel);
       eventTypeLabel.setFont(new Font("Times New Roman",Font.BOLD,15));
       String[] eventTypestr = {"Wedding", "Birthday", "Graduation party", "else"};
       JComboBox eventType= new JComboBox(eventTypestr);
-      eventType.addActionListener(this);
+      eventType.addActionListener(this);// ActionListener to control the JCOMBO elements
       eventPanel.add(eventType);
-      eventType.addActionListener(new ActionListener() {
+      eventType.addActionListener(new ActionListener() { 
           public void actionPerformed(ActionEvent e) {
             JComboBox eType = (JComboBox)e.getSource();
             String typeName = (String)eType.getSelectedItem();
@@ -186,8 +182,13 @@ public void actionPerformed(ActionEvent e){
                 elseEventWindow.setSize(400, 300);
                 elseEventWindow.setLayout(new BorderLayout()); 
                 elseEventWindow.setVisible(true);
+                JLabel background2=new JLabel(new ImageIcon("elseWin.png"));
+                elseEventWindow.add(background2);
+                background2.setLayout(new FlowLayout());
+                JPanel mainPanel =new JPanel();
+                mainPanel.setLayout(new BorderLayout());
                 JPanel elseInfo = new JPanel();
-                elseInfo.setLayout(new GridLayout(3,3));
+                elseInfo.setLayout(new GridLayout(4,3));
                 
                 
                 JLabel eventLabel = new JLabel("Event Type");//Text area goes here
@@ -202,22 +203,22 @@ public void actionPerformed(ActionEvent e){
                
 
                 JLabel nogLabel = new JLabel("Number of guests");//Text area goes here
-                JTextField guest= new JTextField (charactersNumber);;
+                JTextField guest= new JTextField (charactersNumber);
                 elseInfo.add(nogLabel);
                  elseInfo.add(guest);
              
                 JLabel priceLabel = new JLabel("Note:260 SR/person");
+                priceLabel.setFont(new Font("Times New Roman",Font.BOLD,10));
+                priceLabel.setForeground(Color.RED);
                 elseInfo.add(priceLabel);
                 
                 
-                elseEventWindow.add(elseInfo, BorderLayout.NORTH); 
+
                 JPanel elsecomment= new JPanel();
                 JLabel addComment = new JLabel("Additional Comments:");
-                elseEventWindow.add(addComment, BorderLayout.CENTER);
                 additionalcomments = new JTextArea(6,20);
                 elsecomment.add(addComment);
                 elsecomment.add(additionalcomments);
-                elseEventWindow.add(elsecomment, BorderLayout.CENTER);
                 JPanel Combtns = new JPanel();
                 Combtns.setLayout(new GridLayout(1,2));
                 submitBtn = new JButton("Proceed");
@@ -241,10 +242,19 @@ public void actionPerformed(ActionEvent e){
                   }
                 });
                 
-                elseEventWindow.add(Combtns, BorderLayout.SOUTH); 
+                mainPanel.add(elseInfo, BorderLayout.NORTH);
+                mainPanel.add(elsecomment, BorderLayout.CENTER);
+                elsecomment.setOpaque(false);
+                mainPanel.add(Combtns, BorderLayout.SOUTH);
+                Combtns.setOpaque(false);
+                elseInfo.setOpaque(false);
+                mainPanel.setOpaque(false);
+                background2.add(mainPanel);
+                
             }
             if (typeName.equals("Birthday")){
-              
+              // NEW WINDOW TO SET A BIRTHDAY EVENT 
+            	
               birthdayEventWindow = new JFrame("Birthday Event");
                 birthdayEventWindow.setSize(700, 200);
                 birthdayEventWindow.setLayout(new BorderLayout());
@@ -258,21 +268,19 @@ public void actionPerformed(ActionEvent e){
                 JLabel background=new JLabel(new ImageIcon("BRlogo.png"));
                 birthdayEventWindow.add(background);
                 background.setLayout(new FlowLayout());
-                
+                // CHECK BOX GOE HERE 
                 JLabel genderLabel = new JLabel("Gender");
                 maleBox = new JCheckBox("Male");
                 maleBox.setMnemonic(KeyEvent.VK_C);
-                maleBox.setSelected(true);
-
+                maleBox.setSelected(false); 
 
                 femaleBox = new JCheckBox("Femael");
                 femaleBox.setMnemonic(KeyEvent.VK_G);
-                femaleBox.setSelected(true);
+                femaleBox.setSelected(false);
                 birthdayInfo.add(genderLabel);
                 birthdayInfo.add(maleBox);
                 birthdayInfo.add(femaleBox);
 
-                // AGEE
                 JLabel ageLabel = new JLabel("Age");
                 String[] agestr = {"1-5", "6-10", "11-15"};
                 JComboBox age= new JComboBox(agestr);
@@ -281,14 +289,12 @@ public void actionPerformed(ActionEvent e){
                 birthdayInfo.add(ageLabel);
                 birthdayInfo.add(age);
                 
-//                birthdayEventWindow.add(birthdayInfo, BorderLayout.NORTH);
                 Birthdaycomment= new JPanel();
                 JLabel addCom = new JLabel("Additional Comments:");
-//                birthdayEventWindow.add(addCom, BorderLayout.CENTER);
                 additionalcomments = new JTextArea(6,20);
                 Birthdaycomment.add(addCom);
                 Birthdaycomment.add(additionalcomments);
-//                birthdayEventWindow.add(Birthdaycomment, BorderLayout.CENTER);
+
 
               JPanel BDbtns = new JPanel();
               BDbtns.setLayout(new GridLayout(1,2));
@@ -312,7 +318,7 @@ public void actionPerformed(ActionEvent e){
                     birthdayEventWindow.setVisible(false);
                 }
               });
-              //birthdayEventWindow.add(BDbtns, BorderLayout.SOUTH); 
+
               background.add(birthdayInfo);
               background.add(Birthdaycomment);
               Birthdaycomment.setOpaque(false);
@@ -335,10 +341,11 @@ public void actionPerformed(ActionEvent e){
         JComboBox place = (JComboBox)e.getSource();
           String placeName = (String)place.getSelectedItem();
           if(placeName.equals("Else")){
-             final Browser browser = new Browser();
+        	  // The start of the HTML file that holds the google map
+             final Browser browser = new Browser(); // the class browser is from the library jxbrowser 
              BrowserView browserView = new BrowserView(browser);
 
-             JButton zoomInButton = new JButton("Zoom In");
+             JButton zoomInButton = new JButton("Zoom In"); //  to function the zoom In buttons
              zoomInButton.addActionListener(new ActionListener() {
                  public void actionPerformed(ActionEvent e) {
                      if (zoomValue < MAX_ZOOM) {
@@ -347,7 +354,7 @@ public void actionPerformed(ActionEvent e){
                  }
              });
 
-             JButton zoomOutButton = new JButton("Zoom Out");
+             JButton zoomOutButton = new JButton("Zoom Out");//  to function the zoom Out buttons
              zoomOutButton.addActionListener(new ActionListener() {
                  public void actionPerformed(ActionEvent e) {
                      if (zoomValue > MIN_ZOOM) {
@@ -356,16 +363,17 @@ public void actionPerformed(ActionEvent e){
                  }
              });
 
-             JButton setMarkerButton = new JButton("Set Marker");
+             JButton setMarkerButton = new JButton("Set Marker"); // to function the set marker button
              setMarkerButton.addActionListener(new ActionListener() {
                  public void actionPerformed(ActionEvent e) {
                      browser.executeJavaScript("var myLatlng = new google.maps.LatLng(27.139134, 49.559108);\n" +
                              "var marker = new google.maps.Marker({\n" +
                              "    position: myLatlng,\n" +
                              "    map: map,\n" +
-                             "    title: 'Hello World!'\n" +
+                             "    title: 'Set Marker!'\n" +
                              "});");
-                 }
+                 } // This is a javascript code that is excuted by the method .excuteJavaScript from the jxbrowser library
+                 // "LatLng(27.139134, 49.559108)" Are fixed location of the JUC 
              });
 
              JPanel toolBar = new JPanel();
@@ -373,14 +381,15 @@ public void actionPerformed(ActionEvent e){
              toolBar.add(zoomOutButton);
              toolBar.add(setMarkerButton);
 
-             JFrame frame = new JFrame("map.html");
+             JFrame frame = new JFrame("Set A Location");
              frame.add(toolBar, BorderLayout.SOUTH);
              frame.add(browserView, BorderLayout.CENTER);
              frame.setSize(900, 500);
              frame.setLocationRelativeTo(null);
              frame.setVisible(true);
 
-             browser.loadURL("file:///Users/shahdadwani/Documents/workspace/EventPlan/src/map.html");
+             browser.loadURL("file:///Users/shahdadwani/Documents/workspace/EventPlan/src/map.html"); // The path of the html file rendered 
+             //by the browser API provided by jxbroswer
          
       }
       }
@@ -391,41 +400,22 @@ public void actionPerformed(ActionEvent e){
       eventPanel.add(eventPlace);
       eventPlace.setOpaque(false);
       
-      JLabel commentsLabel = new JLabel("Additional Comments");//Text area goes here
-      comments= new JTextArea();
-      commentsLabel.add(comments);
-
 
       // CUSTOMER INFORMATION PANEL STARTS HERE :
 
       customerPanel = new JPanel();
-
       customerPanel.setLayout(new GridLayout(3,1));
-
-      //newEventWindow.add(customerPanel, BorderLayout.CENTER);
-
-      JLabel customerNameLabel= new JLabel ("Customer Name"); //text field goes here
-
+      JLabel customerNameLabel= new JLabel ("Customer Name");
       customerPanel.add(customerNameLabel);
-
       costumerName= new JTextField(charactersNumber);
-
       customerPanel.add(costumerName);
-
-      JLabel emailLabel= new JLabel ("Customer Email"); // text field goes here
-
+      JLabel emailLabel= new JLabel ("Customer Email");
       customerPanel.add(emailLabel);
-
       email= new JTextField(charactersNumber);
-
       customerPanel.add(email);
-
-      JLabel numberLabel= new JLabel (" Customer Phone Number"); // text field goes here
-
+      JLabel numberLabel= new JLabel (" Customer Phone Number");
       customerPanel.add(numberLabel);
-
        number= new JTextField(charactersNumber);
-
        customerPanel.add(number);
        customerPanel.setOpaque(false);
 
@@ -435,17 +425,14 @@ public void actionPerformed(ActionEvent e){
        
        paymentPanel = new JPanel();
        paymentPanel.setLayout(new BorderLayout());
-
-       //newEventWindow.add(paymentPanel);
-
        JLabel paymentMethodLabel= new JLabel("Payment Method:"); //menue goes here
-
        paymentPanel.add(paymentMethodLabel, BorderLayout.NORTH);
        paymentMethodLabel.setFont(new Font("Times New Roman",Font.BOLD,15));
        String[] paymentMethodstr = {"Credit Card", "Cheque"};
        JComboBox paymentMethod= new JComboBox(paymentMethodstr);
        paymentMethod.setEditable(false);
        paymentMethod.addActionListener(this);
+       // Credit card info goes here 
        paymentPanel.add(paymentMethod, BorderLayout.NORTH);
 	  	 paymentCard1 = new JPanel();
 	     paymentCard1.setLayout(new GridLayout(4,4)); 
@@ -462,7 +449,7 @@ public void actionPerformed(ActionEvent e){
 	     JLabel cEDate= new JLabel("Expiry Date");
 	     paymentCard1.add(cEDate);
 	     JPanel comboDate= new JPanel();
-	     comboDate.setLayout(new GridLayout(1,2));
+	     comboDate.setLayout(new GridLayout(1,2));// menue goes here 
 	     String[] expiryDate = {"01", "02","03","04","05", "06", "07", "08", "09", "10", "11", "12"};
 	     JComboBox paymentDate= new JComboBox(expiryDate);
 	     String[] year = {"2017","2018","2019","2020"};
@@ -480,14 +467,15 @@ public void actionPerformed(ActionEvent e){
 	     paymentPanel.add(cards, BorderLayout.CENTER);
 	     paymentCard1.setOpaque(false);
 	     cards.setOpaque(false);
-	     paymentMethod.addActionListener(new ActionListener() {
+	     paymentMethod.addActionListener(new ActionListener() { // a listener to the change in the 
+	    	 //Jcombo box item whereas a new panel is set invisible and the other is set to visible
            public void actionPerformed(ActionEvent e) {
              JComboBox eType = (JComboBox)e.getSource();
              String typeName = (String)eType.getSelectedItem();
 	         if (typeName.equals("Cheque")){
 	        	 paymentCard1.setVisible(false);
 	        	  	 paymentCard2 = new JPanel();
-		             paymentCard2.setLayout(new GridLayout(2,2)); // TO BE ADDED AS A CARD 
+		             paymentCard2.setLayout(new GridLayout(2,2)); // TO BE Visible when chosen
 		             JLabel bName= new JLabel("Issuing Bank");
 		             paymentCard2.add(bName);
 		             bankName= new JTextField(charactersNumber);
@@ -540,7 +528,8 @@ public void actionPerformed(ActionEvent e){
        background1.add(spaceOccupying);
 
 
-    }else if (buttonString.equals("Search")){
+    }// Continuation of button string action listener
+    else if (buttonString.equals("Search")){
     	setSize(400,250);
     	background01.add(search);
     }else if (buttonString.equals("Clear")){
@@ -553,15 +542,16 @@ public void actionPerformed(ActionEvent e){
     	  bankName.setText("");
     	  chequeNumber.setText("");
     }else if(buttonString.equals("Submit")){
-    	JOptionPane.showMessageDialog (null, "Thank you, We Will reach Out to you for further Arrangment"); 
+    	JOptionPane.showMessageDialog (null, "Thank you, We Will reach Out to you for further Arrangments"); 
     }
     
   }
 
-@Override
+@Override // TO OVERRIDE THE ACTION LISTENER THAT IS IMPLEMENTED IN THE MAIN CLASS . 
 public void itemStateChanged(ItemEvent e) {
 	// TODO Auto-generated method stub
 	
 }
 
 }
+// END OF PROGRAM 
